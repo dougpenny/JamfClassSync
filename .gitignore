@@ -1,3 +1,12 @@
+# Potential user files
+es_class_info.txt
+hs_class_info.txt
+ms_class_info.txt
+
+# Config and log files
+jamf_class_sync_config.toml
+jamf_class_sync_log.log
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

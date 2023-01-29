@@ -1,0 +1,242 @@
+##
+#
+# JamfClassSync Configuration File
+#
+# This file is used to configure and control how
+# JamfClassSync creates Jamf classes, based on information
+# provided from PowerSchool export files and from this
+# configuration file.
+#
+##
+
+##
+# Jamf Credentials
+# Enter the username and password for a Jamf user who has privileges
+# to create, read, update, and delete classes in Jamf, along with
+# the full domain of your Jamf server.
+##
+jamf_username = "username"
+jamf_password = "password"
+jamf_domain = "https://<jss-url>"
+
+
+##
+# PowerSchool Export Files
+# List the files you would like to use for creating classes in Jamf.
+#
+# The files can be created using the Data Export Manager in PowerSchool.
+# When creating the export files, select "Student Information" for the category
+# and then select "Student: Core Data" from the 'Export From' selection dropdown.
+# The following columns must be included, with no headers, in the given order:
+#   1.  Course Number (COURSES.COURSE_NUMBER)
+#   2.  Course Name (COURSES.COURSE_NAME)
+#   3.  Section Number (SECTIONS.SECTION_NUMBER)
+#   4.  Section ID (SECTIONS.ID)
+#   5.  Expression (SECTIONS.EXPRESSION)
+#   6.  Room (SECTIONS.ROOM)
+#   7.  Student Email (PCAS_EXTERNALACCOUNTMAP.OPENIDUSERACCOUNTID)
+#   8.  Teacher Email (TEACHERS.EMAIL_ADDR)
+#   9.  School ID (CC.SCHOOLID)
+#   10. Enrollment End Date (CC.DATELEFT)
+#
+# Export files must be located in the same directory as JamfClassSync.py.
+##
+upper_school_file_paths = ["hs_class_info.txt", "ms_class_info.txt"]
+lower_school_file_paths = ["es_class_info.txt"]
+
+
+##
+# Log File
+# File path to which you would like log messages written.
+##
+log_file_path = "jamf_class_sync_log.log"
+
+
+##
+# Ignore Courses
+# The Ignore Courses section can be used to prevent JamfClassSync from
+# creating Jamf classes for specific courses. For example, maybe you
+# do not Jamf classes created for homeroom courses.
+#
+# There are three options for skipping courses, all based on the
+# course number:
+#   1. Prefix - Add any alphabetic prefix to the list and any course
+#               whose course number begins with those letters will
+#               be skipped. For example, adding 'PE' to the list
+#               will skip a course with the number 'PE101'.
+#   2. Suffix - Add any alphabetic suffix to the list and any course
+#               whose course number ends with those letters will
+#               be skipped. For example, adding 'MISC' to the list
+#               will skip a course with the number '201MISC'.
+#   3. Number - Add the specific course number to the list and that
+#               course will be skipped when creating Jamf classes.
+#
+# Do not remove the three options: prefix, suffix, and number. If no courses,
+# need to be ignored, simply leave empty brackets for the option.
+##
+[ignored_courses]
+prefix = ["PE"]
+suffix = ["V"]
+number = ["MISC101", "MISC111", "MISC15"]
+
+
+##
+# Lower School Teachers
+# The lower school teachers section works along with the lower
+# schoo class names to create "custom" classes in Jamf. The
+# use case for this is when you have a group of students who
+# may move between teachers throughout the day, but always stay
+# together as a group. This section designates the teachers who
+# should be included in these classes. For example, a 4th grade 
+# homeroom class that travels to all of their core classes together
+# may included all of the 4th grade homeroom teachers and any other
+# elective or specials teachers.
+#
+# The key value in this section is the course number in PowerSchool
+# that should be used to generate the Jamf class. The corresponding 
+# value is a list of Jamf usernames that should be included as the
+# teachers for this class.
+##
+[lower_school_teachers]
+Att4 = [
+  "<teacher1-username>",
+  "<teacher2-username>"
+]
+Att5 = [
+  "<teacher1-username>",
+  "<teacher2-username>"
+]
+
+
+##
+# Lower School Class Names
+# As mentioned above, this section works in conjuction with the Lower
+# School Teachers to create "custom" classes in Jamf. This section
+# designates the name that should be used for the class when created
+# in Jamf. For example, when the key matches Mrs. Smith's email or username
+# the class will be named "Mrs. Smith's Homeroom" in Jamf. This provides an
+# easy way for the other teachers in Mrs. Smith's team to identify her
+# group of students in Apple Classroom.
+#
+# The section heading needs to be edited to use the same course number
+# used above in the Lower School Teachers section. The key value should be the
+# teacher's email address as export in the PowerSchool records. The corresponding
+# value is the class name as you would like for it to appear in Jamf.
+##
+[lower_school_class_names.Att4]
+"<teacher1-username>" = "Teacher 1's Class"
+"<teacher2-username>" = "Teacher 2's Class"
+[lower_school_class_names.Att5]
+"<teacher3-username>" = "Teacher 3's Class"
+"<teacher4-username>" = "Teacher 4's Class"
+
+
+##
+# Period by School Number
+# The period by school number section is used to map the PowerSchool
+# expressions to pleasent period designations. This is useful for
+# helping teachers identitfy their different classes in Apple Classroom.
+#
+# Each section heading should include the school number as the last element
+# of the heading. The key values are the expression numbers, not including
+# any day designations. The corresponding values are the display name you
+# would like to use for the expression.
+##
+[period_by_school_number.1]
+"1" = "0th"
+"2" = "1st"
+"3" = "2nd"
+"4" = "3rd"
+"5" = "HR"
+"6" = "4th"
+"7" = "5th"
+"8" = "6th"
+"9" = "7th"
+
+[period_by_school_number.2]
+"1" = "HR"
+"2" = "1st"
+"3" = "2nd"
+"4" = "3rd"
+"5" = "4th"
+"6" = "5th"
+"7" = "6th"
+"8" = "7th"
+
+
+##
+# Cart Classes
+# The sections below are used for created classes in Jamf for carts
+# iPads. Usually, these iPads are not assigned to an individual student,
+# but are assigned to a generic user in Jamf. The section will allow you
+# to create a class for a cart of iPads.
+#
+# Each section is made up of several parts. The last element of the
+# section heading is the cart name (e.g. "k5a"). This will be used for
+# creating the generic students to be added to the class. If the cart
+# name is "k5a", student usernames will be k5a-student01... up to size.
+# The number of students created for each class is controlled by the
+# value of size. Note: These usernames must already exisit in Jamf and
+# be assigned to iPads in Jamf.
+#
+# The value for teacher is the email address for teh teacher assigned
+# to this cart of iPads. The value for class_name should be the display
+# name for the class being created in Jamf.
+#
+# You can have as many, few, or no cart classes created. Simply add or
+# delete the sections as needed. If no cart classes are needed, delete
+# all of the sections below; ensuring their is no section heading that
+# begins with "cart_classes".
+##
+
+#
+# Kindergarten Cart Classes
+#
+[cart_classes.k5a]
+teacher = "<teacher1-username>"
+class_name = "Teacher 1's K5 Class"
+size = 20
+
+[cart_classes.k5b]
+teacher = "<teacher2-username>"
+class_name = "Teacher 2's K5 Class"
+size = 20
+
+#
+# 1st Grade Cart Classes
+#
+[cart_classes.1a]
+teacher = "<teacher1-username>"
+class_name = "Teacher 1's 1st Grade Class"
+size = 24
+
+[cart_classes.1b]
+teacher = "<teacher2-username>"
+class_name = "Teacher 2's 1st Grade Class"
+size = 24
+
+#
+# 2nd Grade Cart Classes
+#
+[cart_classes.2a]
+teacher = "<teacher1-username>"
+class_name = "Teacher 1's 2nd Grade Class"
+size = 24
+
+[cart_classes.2b]
+teacher = "<teacher2-username>"
+class_name = "Teacher 2's 2nd Grade Class"
+size = 24
+
+#
+# 3rd Grade Cart Classes
+#
+[cart_classes.3a]
+teacher = "<teacher1-username>"
+class_name = "Teacher 1's 3rd Grade Class"
+size = 24
+
+[cart_classes.3b]
+teacher = "<teacher2-username>"
+class_name = "Teacher 2's 3rd Grade Class"
+size = 24
