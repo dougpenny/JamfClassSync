@@ -40,7 +40,7 @@ def main():
     # Instantiate the PyJamfPro client for communicating with the Jamf server
     #
     client = jamfpro.Client(
-        config["jamf_domain"], config["jamf_username"], config["jamf_password"]
+        config["jamf_domain"], config["jamf_client_id"], config["jamf_client_secret"]
     )
 
     deleted: int = 0
