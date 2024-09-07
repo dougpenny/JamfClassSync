@@ -40,7 +40,7 @@ def main():
     # Instantiate the PyJamfPro client for communicating with the Jamf server
     #
     client = jamfpro.Client(
-        config["jamf_domain"], config["jamf_client_id"], config["jamf_client_secret"]
+        config["jamf_domain"], config["jamf_username"], config["jamf_password"]
     )
 
     deleted: int = 0
@@ -80,7 +80,9 @@ def main():
                 )
 
     end = time.time()
-    logging.info(f"Deleted {deleted} class(es) found in Jamf in {(end - start):.4f} seconds.")
+    logging.info(
+        f"Deleted {deleted} class(es) found in Jamf in {(end - start):.4f} seconds."
+    )
     logging.info("** End log for JamfClassDelete.py **\n")
 
 

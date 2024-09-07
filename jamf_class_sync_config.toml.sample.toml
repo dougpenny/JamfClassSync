@@ -11,12 +11,12 @@
 
 ##
 # Jamf Credentials
-# Enter the client_id and client_secret for a Jamf API client that
+# Enter the username and password for a Jamf API user that
 # has privileges to create, read, update, and delete classes in Jamf,
 # along with the full domain of your Jamf server.
 ##
-jamf_client_id = "client id"
-jamf_client_secret = "client secret"
+jamf_username = "client id"
+jamf_password = "client secret"
 jamf_domain = "https://<jss-url>"
 
 

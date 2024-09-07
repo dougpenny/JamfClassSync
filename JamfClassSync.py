@@ -89,7 +89,9 @@ def classesDoNotMatch(powerschool_class: Dict, jamf_class: Dict) -> bool:
     """
     if powerschool_class.get("name", False) != jamf_class.get("name", False):
         return True
-    if powerschool_class.get("description", False) != jamf_class.get("description", False):
+    if powerschool_class.get("description", False) != jamf_class.get(
+        "description", False
+    ):
         return True
     if Counter(powerschool_class.get("students", ["student-a"])) != Counter(
         jamf_class.get("students", ["student-b"])
@@ -248,7 +250,7 @@ def main():
     # Instantiate the PyJamfPro client for communicating with the Jamf server
     #
     client = jamfpro.Client(
-        config["jamf_domain"], config["jamf_client_id"], config["jamf_client_secret"]
+        config["jamf_domain"], config["jamf_username"], config["jamf_password"]
     )
 
     #
@@ -328,7 +330,9 @@ def main():
                 )
     if len(update_retries) > 0:
         for update_class in update_retries:
-            class_id = client.classic_update_class_with_name(update_class["name"], update_class)
+            class_id = client.classic_update_class_with_name(
+                update_class["name"], update_class
+            )
             if class_id:
                 updated = updated + 1
             else:
